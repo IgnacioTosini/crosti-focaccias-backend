@@ -60,11 +60,11 @@ public class SpringSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         // Obtener el origen permitido desde variables de entorno
         String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
         config.setAllowedOrigins(Arrays.asList(frontendUrl));
-        
+
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
