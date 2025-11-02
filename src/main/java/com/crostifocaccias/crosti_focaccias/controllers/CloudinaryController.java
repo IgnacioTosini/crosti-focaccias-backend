@@ -107,12 +107,6 @@ public class CloudinaryController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.OPTIONS)
     public ResponseEntity<?> corsPreflight() {
-        System.out.println("[CloudinaryController] OPTIONS /upload llamado");
-        return ResponseEntity.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:5173, https://crosti-focaccias-frontend.vercel.app")
-                .header("Access-Control-Allow-Methods", "DELETE, OPTIONS")
-                .header("Access-Control-Allow-Headers", "*", "Content-Type", "apiKey", "X-API-KEY", "Authorization")
-                .header("Access-Control-Allow-Credentials", "true")
-                .build();
+        return ResponseEntity.ok().build();
     }
 }

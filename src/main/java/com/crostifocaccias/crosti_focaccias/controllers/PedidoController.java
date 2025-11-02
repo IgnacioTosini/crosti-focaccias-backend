@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/pedidos")
-@CrossOrigin(origins = "http://localhost:5173, https://crosti-focaccias-frontend.vercel.app")
 public class PedidoController {
 
     @Autowired
