@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  crosti-focaccias-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - DATABASE_URL=jdbc:postgresql://ep-silent-resonance-acf17e0m-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require
+      - DATABASE_USERNAME=neondb_owner
+      - DATABASE_PASSWORD=npg_pjHsyuW9AXo3
+      - DATABASE_DRIVER=org.postgresql.Driver
+      - DATABASE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - FRONTEND_URL=http://localhost:5173
+      - CLOUDINARY_CLOUD_NAME=dt1wkwlxc
+      - CLOUDINARY_API_KEY=636186212435821
+      - CLOUDINARY_API_SECRET=u6X0ypUkYOYEsBR7bpZraOqfXik
+      - CLOUDINARY_UPLOAD_PRESET=crostiFocaccias_preset
+      - LOG_LEVEL=INFO
+      - SHOW_SQL=false
+      - PORT=8080
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/focaccias"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

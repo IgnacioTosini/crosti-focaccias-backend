@@ -49,7 +49,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             }
 
             if (!API_KEY_VALUE.equals(apiKey)) {
-                response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+                response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173, https://crosti-focaccias-frontend.vercel.app");
                 response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-API-KEY");
                 response.setHeader("Access-Control-Allow-Credentials", "true");
