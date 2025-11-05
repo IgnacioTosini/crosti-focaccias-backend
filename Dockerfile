@@ -1,21 +1,19 @@
-# Usar una imagen base de OpenJDK 17 con Alpine para menor tamaño
-FROM openjdk:17-jdk-alpine
+# =============================================================================
+# STAGE 1: Build stage - Compilar la aplicación
+# =============================================================================
+FROM maven:3.9.5-eclipse-temurin-17 AS builder
 
 # Información del mantenedor
 LABEL maintainer="IgnacioTosini"
 
-# Crear un usuario no-root para mayor seguridad
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
-
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de Maven wrapper y pom.xml primero (para aprovechar cache de Docker)
+# Copiar los archivos de Maven y pom.xml primero (para aprovechar cache de Docker)
+COPY pom.xml ./
+COPY .mvn .mvn
 COPY mvnw ./
 COPY mvnw.cmd ./
-COPY .mvn .mvn
-COPY pom.xml ./
 
 # Dar permisos de ejecución al wrapper de Maven
 RUN chmod +x ./mvnw
@@ -28,6 +26,24 @@ COPY src ./src
 
 # Compilar la aplicación
 RUN ./mvnw clean package -DskipTests
+
+# =============================================================================
+# STAGE 2: Runtime stage - Imagen final ligera solo con JRE
+# =============================================================================
+FROM eclipse-temurin:17-jre-alpine AS runtime
+
+# Información del mantenedor
+LABEL maintainer="IgnacioTosini"
+
+# Crear un usuario no-root para mayor seguridad (Alpine usa addgroup/adduser)
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar solo el JAR compilado desde el stage anterior
+COPY --from=builder /app/target/crosti-focaccias-*.jar app.jar
 
 # Cambiar al usuario no-root
 USER appuser
