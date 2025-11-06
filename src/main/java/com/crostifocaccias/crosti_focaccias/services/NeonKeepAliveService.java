@@ -9,14 +9,15 @@ import org.springframework.stereotype.Service;
 import com.crostifocaccias.crosti_focaccias.repositories.IFocacciaRepository;
 
 /**
- * Servicio para mantener activa la base de datos Neon mediante pings automáticos
+ * Servicio para mantener activa la base de datos Neon mediante pings
+ * automáticos
  * Previene la hibernación de la base de datos en planes gratuitos
  */
 @Service
 public class NeonKeepAliveService {
 
     private static final Logger logger = LoggerFactory.getLogger(NeonKeepAliveService.class);
-    
+
     // Intervalo de 5 minutos = 300000 ms (más agresivo para Neon gratuito)
     private static final long KEEP_ALIVE_INTERVAL = 300000;
 
@@ -31,20 +32,20 @@ public class NeonKeepAliveService {
     public void keepAlive() {
         try {
             long startTime = System.currentTimeMillis();
-            
+
             // Realizar una consulta ligera para mantener la conexión activa
             long count = focacciaRepository.count();
-            
+
             long duration = System.currentTimeMillis() - startTime;
-            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | Próximo ping en 5 min", 
-                       count, duration);
-                       
+            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | Próximo ping en 5 min",
+                    count, duration);
+
         } catch (Exception e) {
             logger.error("❌ Error en Neon keep-alive: {}", e.getMessage());
             logger.error("Stack trace completo: ", e);
         }
     }
-    
+
     /**
      * Método para verificar manualmente el estado de la conexión
      * Útil para debugging
@@ -53,7 +54,7 @@ public class NeonKeepAliveService {
         logger.info("🔧 Ejecutando ping manual...");
         keepAliveInternal();
     }
-    
+
     private void keepAliveInternal() {
         try {
             long count = focacciaRepository.count();

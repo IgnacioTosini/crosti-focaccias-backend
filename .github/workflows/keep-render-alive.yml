@@ -1,0 +1,42 @@
+name: Keep Render Service Alive
+
+# Ejecutar cada 5 minutos para mantener el servicio de Render activo
+# Esto previene que Render hiberne el servicio gratuito después de 30 min de inactividad
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Cada 5 minutos
+  workflow_dispatch:  # Permitir ejecución manual
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping Render Service
+        run: |
+          echo "🔄 Haciendo ping al servicio de Render..."
+          
+          # Hacer request al endpoint para mantener el servicio activo
+          response=$(curl -s -w "%{http_code}" \
+            -H "User-Agent: GitHub-Actions-KeepAlive/1.0" \
+            -H "Accept: application/json" \
+            --max-time 30 \
+            https://crosti-focaccias-backend.onrender.com/api/focaccias/featured)
+          
+          http_code="${response: -3}"
+          
+          if [ "$http_code" = "200" ]; then
+            echo "✅ Ping exitoso (HTTP $http_code)"
+            echo "🍕 Servicio de focaccias mantenido activo"
+          else
+            echo "⚠️ Respuesta HTTP: $http_code"
+            echo "🔍 Respuesta completa: $response"
+            # No fallar el job por errores ocasionales
+            exit 0
+          fi
+          
+      - name: Log Status
+        run: |
+          echo "📊 Keep-alive ejecutado: $(date)"
+          echo "🕐 Próximo ping en 5 minutos"
+          echo "🎯 Servicio: crosti-focaccias-backend.onrender.com"
