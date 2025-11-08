@@ -16,11 +16,15 @@ jobs:
         run: |
           echo "🔄 Haciendo ping al servicio de Render..."
           
-          # Hacer request al endpoint para mantener el servicio activo
+          # Hacer request al endpoint con timeout extendido y reintentos
+          # Render puede tardar hasta 60s en despertar desde hibernación
           response=$(curl -s -w "%{http_code}" \
             -H "User-Agent: GitHub-Actions-KeepAlive/1.0" \
             -H "Accept: application/json" \
-            --max-time 30 \
+            --retry 3 \
+            --retry-delay 5 \
+            --max-time 90 \
+            --connect-timeout 30 \
             https://crosti-focaccias-backend.onrender.com/api/focaccias/featured)
           
           http_code="${response: -3}"
@@ -28,9 +32,14 @@ jobs:
           if [ "$http_code" = "200" ]; then
             echo "✅ Ping exitoso (HTTP $http_code)"
             echo "🍕 Servicio de focaccias mantenido activo"
+          elif [ "$http_code" = "000" ]; then
+            echo "⚠️ Timeout o conexión fallida (puede estar despertando)"
+            echo "🔄 Esto es normal en la primera ejecución"
+            # No fallar - el siguiente ping funcionará
+            exit 0
           else
             echo "⚠️ Respuesta HTTP: $http_code"
-            echo "🔍 Respuesta completa: $response"
+            echo "🔍 El servicio respondió pero con código inesperado"
             # No fallar el job por errores ocasionales
             exit 0
           fi
