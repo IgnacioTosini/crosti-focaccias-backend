@@ -49,6 +49,8 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/pedido-focaccias/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/pedido-focaccias/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/pedido-focaccias/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/chatbot/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/chatbot/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(config -> config.disable())
