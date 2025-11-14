@@ -74,7 +74,7 @@ public class ChatbotResponses {
     );
 
     public static final ResponsePattern INGREDIENTS = new ResponsePattern(
-        "\\b(ingrediente|lleva|contiene|hecho|composicion)\\b",
+        "\\b(ingredientes?|lleva|contiene|hecho|composicion|usan|usa|utilizan)\\b",
         "Todas nuestras focaccias están hechas con ingredientes frescos y de calidad 🌿. Cada una tiene una descripción detallada en el menú donde puedes ver exactamente qué lleva. ¿Hay alguna en particular que te interese?",
         "INGREDIENTES"
     );
@@ -104,15 +104,18 @@ public class ChatbotResponses {
     );
 
     public static final String DEFAULT_RESPONSE = 
-        "¡Hola! Soy el asistente de Crosti Focaccias 🍕. Puedo ayudarte con información sobre:\n\n" +
-        "🍕 Nuestras focaccias y precios\n" +
-        "🌱 Opciones veganas\n" +
-        "🛒 Cómo hacer pedidos\n" +
-        "🚚 Delivery\n\n" +
-        "¿En qué puedo ayudarte?";
+        "No estoy seguro de entender tu pregunta 🤔. ¿Te refieres a alguna de estas opciones?\n\n" +
+        "🍕 ¿Qué focaccias tienen?\n" +
+        "🌱 ¿Tienen opciones veganas?\n" +
+        "💰 ¿Cuánto cuesta?\n" +
+        "🛒 ¿Cómo hacer un pedido?\n" +
+        "🚚 ¿Hacen delivery?\n" +
+        "🌿 ¿Qué ingredientes usan?\n" +
+        "🕐 ¿Cuál es el horario?\n" +
+        "📍 ¿Dónde están ubicados?";
 
     public static final String ERROR_RESPONSE = 
-        "Lo siento, tuve un pequeño problema. ¿Podrías reformular tu pregunta? 😊";
+        "Lo siento, tuve un pequeño problema. ¿Podrías seleccionar una de las opciones sugeridas? 😊";
 
     public static final String MENU_EMPTY_RESPONSE = 
         "Por el momento estamos actualizando nuestro menú. Por favor, vuelve pronto para ver nuestras deliciosas focaccias 🍕";
