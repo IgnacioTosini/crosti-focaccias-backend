@@ -18,8 +18,9 @@ public class NeonKeepAliveService {
 
     private static final Logger logger = LoggerFactory.getLogger(NeonKeepAliveService.class);
 
-    // Intervalo de 5 minutos = 300000 ms (más agresivo para Neon gratuito)
-    private static final long KEEP_ALIVE_INTERVAL = 300000;
+    // Intervalo de 30 minutos = 1800000 ms (balance óptimo: mantiene BD activa sin consumir mucho)
+    // Con las optimizaciones de Hibernate, esto consume muy poco
+    private static final long KEEP_ALIVE_INTERVAL = 1800000;
 
     @Autowired
     private IFocacciaRepository focacciaRepository;
@@ -37,7 +38,7 @@ public class NeonKeepAliveService {
             long count = focacciaRepository.count();
 
             long duration = System.currentTimeMillis() - startTime;
-            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | Próximo ping en 5 min",
+            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | Próximo ping en 30 min",
                     count, duration);
 
         } catch (Exception e) {

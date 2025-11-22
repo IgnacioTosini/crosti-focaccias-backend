@@ -29,23 +29,24 @@ public class HealthController {
     @GetMapping("/keep-alive")
     public ResponseEntity<Map<String, Object>> checkKeepAlive() {
         Map<String, Object> response = new HashMap<>();
-        
+
         try {
             // Ejecutar ping manual
             neonKeepAliveService.manualPing();
-            
+
             response.put("status", "OK");
             response.put("message", "Keep-alive funcionando correctamente");
             response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            response.put("next_scheduled_ping", "En 5 minutos desde el último ping automático");
-            
+            response.put("next_scheduled_ping", "En 30 minutos desde el último ping automático");
+            response.put("note", "Optimizado: pool reducido + validate (sin consumo excesivo)");
+
             return ResponseEntity.ok(response);
-            
+
         } catch (Exception e) {
             response.put("status", "ERROR");
             response.put("message", "Error en keep-alive: " + e.getMessage());
             response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            
+
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -59,7 +60,7 @@ public class HealthController {
         response.put("status", "UP");
         response.put("service", "crosti-focaccias-backend");
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        
+
         return ResponseEntity.ok(response);
     }
 }
