@@ -1,10 +1,10 @@
 name: Keep Render Service Alive
 
-# Ejecutar cada 5 minutos para mantener el servicio de Render activo
-# Esto previene que Render hiberne el servicio gratuito después de 30 min de inactividad
+# Ejecutar cada 30 minutos para mantener el servicio de Render activo
+# Optimizado para reducir consumo de cómputo en Neon (83% menos que cada 5 min)
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Cada 5 minutos
+    - cron: '*/30 * * * *'  # Cada 30 minutos
   workflow_dispatch:  # Permitir ejecución manual
 
 jobs:
@@ -47,5 +47,6 @@ jobs:
       - name: Log Status
         run: |
           echo "📊 Keep-alive ejecutado: $(date)"
-          echo "🕐 Próximo ping en 5 minutos"
+          echo "🕐 Próximo ping en 30 minutos"
+          echo "⚡ Optimizado: reducción del 83% en consumo vs 5 min"
           echo "🎯 Servicio: crosti-focaccias-backend.onrender.com"
