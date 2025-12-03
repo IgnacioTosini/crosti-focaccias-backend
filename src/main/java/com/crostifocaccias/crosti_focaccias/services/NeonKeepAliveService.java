@@ -18,18 +18,21 @@ public class NeonKeepAliveService {
 
     private static final Logger logger = LoggerFactory.getLogger(NeonKeepAliveService.class);
 
-    // Intervalo de 30 minutos = 1800000 ms (balance óptimo: mantiene BD activa sin consumir mucho)
-    // Con las optimizaciones de Hibernate, esto consume muy poco
-    private static final long KEEP_ALIVE_INTERVAL = 1800000;
+    // KEEP-ALIVE DESACTIVADO: Con el sistema de caché del frontend, no es necesario
+    // mantener el servidor activo todo el tiempo. Esto ahorra mucho en compute hours.
+    // Intervalo de 4 horas = 14400000 ms (solo para uso manual si se requiere)
+    private static final long KEEP_ALIVE_INTERVAL = 14400000;
 
     @Autowired
     private IFocacciaRepository focacciaRepository;
 
     /**
-     * Ejecuta un ping cada 5 minutos para mantener la conexión activa
-     * El primer ping se ejecuta después de 30 segundos del inicio
+     * Keep-alive DESACTIVADO automáticamente
+     * El frontend usa caché para mostrar datos cuando el servidor hiberna
+     * Esto reduce drásticamente el consumo de compute hours
+     * Descomentar @Scheduled solo si necesitas el servidor siempre activo
      */
-    @Scheduled(initialDelay = 30000, fixedRate = KEEP_ALIVE_INTERVAL)
+    // @Scheduled(initialDelay = 30000, fixedRate = KEEP_ALIVE_INTERVAL)
     public void keepAlive() {
         try {
             long startTime = System.currentTimeMillis();
@@ -38,7 +41,7 @@ public class NeonKeepAliveService {
             long count = focacciaRepository.count();
 
             long duration = System.currentTimeMillis() - startTime;
-            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | Próximo ping en 30 min",
+            logger.info("🔄 Neon keep-alive exitoso - Total focaccias: {} | Duración: {}ms | (Keep-alive automático DESACTIVADO)",
                     count, duration);
 
         } catch (Exception e) {

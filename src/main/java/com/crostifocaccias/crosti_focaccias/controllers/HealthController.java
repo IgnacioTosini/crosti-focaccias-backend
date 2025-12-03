@@ -37,8 +37,8 @@ public class HealthController {
             response.put("status", "OK");
             response.put("message", "Keep-alive funcionando correctamente");
             response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            response.put("next_scheduled_ping", "En 30 minutos desde el último ping automático");
-            response.put("note", "Optimizado: pool reducido + validate (sin consumo excesivo)");
+            response.put("note", "Keep-alive automático DESACTIVADO - Frontend usa caché cuando servidor hiberna");
+            response.put("compute_savings", "Ahorro significativo en compute hours con sistema de caché");
 
             return ResponseEntity.ok(response);
 
