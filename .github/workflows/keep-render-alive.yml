@@ -1,11 +1,14 @@
 name: Keep Render Service Alive
 
-# Ejecutar cada 30 minutos para mantener el servicio de Render activo
-# Optimizado para reducir consumo de cómputo en Neon (83% menos que cada 5 min)
+# ⚠️ WORKFLOW DESACTIVADO - Usa sistema de caché en frontend
+# El keep-alive consume recursos innecesariamente
+# Con el caché implementado, la app funciona perfectamente aunque el servidor hiberne
+# Solo activar si realmente necesitas el servidor 24/7 activo
+
 on:
-  schedule:
-    - cron: '*/30 * * * *'  # Cada 30 minutos
-  workflow_dispatch:  # Permitir ejecución manual
+  # schedule:
+  #   - cron: '*/30 * * * *'  # Cada 30 minutos (DESACTIVADO)
+  workflow_dispatch:  # Permitir ejecución manual solo si es necesario
 
 jobs:
   keep-alive:
