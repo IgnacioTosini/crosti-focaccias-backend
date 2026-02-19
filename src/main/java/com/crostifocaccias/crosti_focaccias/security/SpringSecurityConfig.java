@@ -68,7 +68,8 @@ public class SpringSecurityConfig {
             "http://localhost:5173",
             "http://localhost:3000",
             "https://crosti-focaccias.vercel.app",
-            "https://crosti-focaccias-frontend.vercel.app"
+            "https://crosti-focaccias-frontend.vercel.app",
+            "https://crosti-focaccias.vercel.app"
         ));
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
