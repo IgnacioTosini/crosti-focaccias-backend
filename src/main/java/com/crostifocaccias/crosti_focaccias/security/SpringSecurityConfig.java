@@ -51,6 +51,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/pedido-focaccias/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/chatbot/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/chatbot/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(config -> config.disable())
@@ -65,12 +66,11 @@ public class SpringSecurityConfig {
 
         // Permitir múltiples orígenes: localhost + Vercel
         config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173",
-            "http://localhost:3000",
-            "https://crosti-focaccias.vercel.app",
-            "https://crosti-focaccias-frontend.vercel.app",
-            "https://crosti-focaccias.vercel.app"
-        ));
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://crosti-focaccias.vercel.app",
+                "https://crosti-focaccias-frontend.vercel.app",
+                "https://crosti-focaccias.vercel.app"));
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
