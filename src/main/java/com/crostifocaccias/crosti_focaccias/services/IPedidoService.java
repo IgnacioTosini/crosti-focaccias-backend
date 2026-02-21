@@ -2,17 +2,19 @@ package com.crostifocaccias.crosti_focaccias.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import com.crostifocaccias.crosti_focaccias.entities.Pedido;
 import com.crostifocaccias.crosti_focaccias.dto.PedidoRequestDTO;
+import com.crostifocaccias.crosti_focaccias.dto.PedidoResponseDTO;
+import com.crostifocaccias.crosti_focaccias.entities.Pedido;
 
 public interface IPedidoService {
-    Pedido createPedido(PedidoRequestDTO pedidoRequest);
 
-    List<Pedido> getAllPedidos();
+    PedidoResponseDTO createPedido(PedidoRequestDTO pedidoRequest);
 
-    Pedido getPedidoById(Long id);
+    List<PedidoResponseDTO> getAllPedidos();
 
-    Pedido deletePedido(Long id);
+    PedidoResponseDTO getPedidoById(Long id);
+
+    PedidoResponseDTO deletePedido(Long id);
 
     List<Pedido> findByClientPhone(String clientPhone);
 

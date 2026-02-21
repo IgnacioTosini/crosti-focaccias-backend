@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.crostifocaccias.crosti_focaccias.dto.PedidoRequestDTO;
+import com.crostifocaccias.crosti_focaccias.dto.PedidoResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +26,7 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public Pedido createPedido(PedidoRequestDTO pedidoRequest) {
+    public PedidoResponseDTO createPedido(PedidoRequestDTO pedidoRequest) {
         Pedido pedido = new Pedido();
         pedido.setClientPhone(pedidoRequest.getClientPhone());
 
@@ -53,30 +54,39 @@ public class PedidoService implements IPedidoService {
             pedido.setQuantity(0);
             pedido.setTotalPrice(0.0);
         }
-        return pedidoRepository.save(pedido);
+        return toResponseDTO(pedidoRepository.save(pedido));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Pedido> getAllPedidos() {
-        return pedidoRepository.findAll();
+    public List<PedidoResponseDTO> getAllPedidos() {
+        return pedidoRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Pedido getPedidoById(Long id) {
-        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
-        return pedidoOpt.orElse(null);
+    public PedidoResponseDTO getPedidoById(Long id) {
+        return pedidoRepository.findById(id)
+                .map(this::toResponseDTO)
+                .orElse(null);
     }
 
     @Override
     @Transactional
-    public Pedido deletePedido(Long id) {
-        Pedido pedido = getPedidoById(id);
-        if (pedido != null) {
-            pedidoRepository.deleteById(id);
+    public PedidoResponseDTO deletePedido(Long id) {
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+
+        if (pedidoOpt.isEmpty()) {
+            return null;
         }
-        return pedido;
+
+        Pedido pedido = pedidoOpt.get();
+        pedidoRepository.delete(pedido);
+
+        return toResponseDTO(pedido);
     }
 
     @Override
@@ -94,5 +104,31 @@ public class PedidoService implements IPedidoService {
     @Override
     public List<Pedido> findByTotalPrice(double totalPrice) {
         return pedidoRepository.findByTotalPrice(totalPrice);
+    }
+
+    private PedidoResponseDTO toResponseDTO(Pedido pedido) {
+
+        List<PedidoResponseDTO.PedidoFocacciaResponse> focaccias = pedido.getPedidoFocaccias() == null ? List.of() :
+
+                pedido.getPedidoFocaccias().stream()
+                        .map(pf -> new PedidoResponseDTO.PedidoFocacciaResponse(
+                                pf.getFocaccia().getId(),
+                                pf.getFocaccia().getName(),
+                                pf.getFocaccia().getDescription(),
+                                pf.getFocaccia().getPrice(),
+                                pf.getFocaccia().getIsVeggie(),
+                                pf.getFocaccia().getImageUrl(),
+                                pf.getFocaccia().getImagePublicId(),
+                                pf.getFocaccia().getFeatured(),
+                                pf.getCantidad()))
+                        .toList();
+
+        return new PedidoResponseDTO(
+                pedido.getId(),
+                pedido.getClientPhone(),
+                focaccias,
+                pedido.getQuantity(),
+                pedido.getTotalPrice(),
+                pedido.getOrderDate());
     }
 }
