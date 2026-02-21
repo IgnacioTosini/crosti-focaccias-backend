@@ -31,22 +31,14 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/focaccias/**").permitAll()
-                        .requestMatchers("/api/pedidos").permitAll()
-                        .requestMatchers("/api/pedidos/**").permitAll()
-                        .requestMatchers("/api/pedido-focaccias/**").permitAll()
-                        .requestMatchers("/api/cloudinary/**").permitAll()
-                        .requestMatchers("/api/chatbot/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/health/**").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(config -> config.disable())
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll())
+                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
